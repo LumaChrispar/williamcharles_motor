@@ -1,0 +1,13 @@
+.cookie-banner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+  background: var(--bg-secondary); border-top: 1px solid var(--border);
+  padding: 24px; display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; animation: slideUp 0.5s ease forwards; backdrop-filter: blur(20px);
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.cookie-banner p { color: var(--text-secondary); font-size: 0.9rem; flex: 1; }
+.cookie-actions { display: flex; gap: 12px; flex-shrink: 0; }
+.cookie-actions .btn-primary, .cookie-actions .btn-secondary { padding: 10px 20px; font-size: 0.85rem; }
+@media (max-width: 600px) {
+  .cookie-banner { flex-direction: column; text-align: center; }
+}
