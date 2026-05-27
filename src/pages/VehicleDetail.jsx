@@ -33,6 +33,13 @@ export default function VehicleDetail() {
     { label: 'Road Tax', value: vehicle.roadTax },
   ];
 
+  // Pre-configured custom WhatsApp URL with pre-filled premium enquiry text
+  const whatsappText = encodeURIComponent(`Hello williamcharles_motor! I am extremely interested in purchasing the ${vehicle.make} ${vehicle.model} (${vehicle.year}) listed for £${vehicle.price.toLocaleString()}. Please let me know how to proceed.`);
+  const whatsappUrl = `https://wa.me/237683115837?text=${whatsappText}`;
+
+  // Direct SMS / Text message pre-filled link
+  const smsUrl = `sms:+237683115837?body=${whatsappText}`;
+
   return (
     <main className="detail-page">
       <div className="detail-breadcrumb container">
@@ -62,6 +69,17 @@ export default function VehicleDetail() {
             <span>{vehicle.year}</span><span>{vehicle.color}</span>
             <span>{vehicle.bodyType}</span><span>{vehicle.doors} doors</span>
           </div>
+          
+          {/* Quick Premium Access Reachout Buttons */}
+          <div className="premium-quick-reach">
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-whatsapp-premium">
+              <span className="icon">💬</span> Chat on WhatsApp
+            </a>
+            <a href={smsUrl} className="btn-sms-premium">
+              <span className="icon">📱</span> Text Admin Direct
+            </a>
+          </div>
+
           <div className="specs-grid">
             {specs.map(s => (
               <div className="spec-item" key={s.label}>

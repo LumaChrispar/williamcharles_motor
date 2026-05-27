@@ -15,11 +15,26 @@
 .detail-title { margin-bottom: 16px; }
 .detail-title h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
 .detail-price { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
-.detail-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+.detail-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
 .detail-badges span {
   background: var(--bg-card); border: 1px solid var(--border); padding: 6px 14px;
   border-radius: 50px; font-size: 0.8rem; color: var(--text-secondary);
 }
+.premium-quick-reach { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.btn-whatsapp-premium {
+  background: #25d366; color: #ffffff; padding: 12px; text-align: center;
+  border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 4px 14px rgba(37,211,102,0.3); transition: var(--transition);
+}
+.btn-whatsapp-premium:hover { background: #20ba5a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
+.btn-sms-premium {
+  background: #007aff; color: #ffffff; padding: 12px; text-align: center;
+  border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 4px 14px rgba(0,122,255,0.3); transition: var(--transition);
+}
+.btn-sms-premium:hover { background: #0062cc; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,122,255,0.4); }
 .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
 .spec-item { background: var(--bg-card); padding: 14px 18px; display: flex; justify-content: space-between; }
 .spec-label { color: var(--text-secondary); font-size: 0.85rem; }
@@ -54,5 +69,6 @@
 @media (max-width: 768px) {
   .detail-content { grid-template-columns: 1fr; gap: 24px; }
   .specs-grid { grid-template-columns: 1fr; }
+  .premium-quick-reach { grid-template-columns: 1fr; }
   .detail-actions { flex-direction: column; }
 }

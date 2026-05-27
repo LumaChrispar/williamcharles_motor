@@ -10,20 +10,20 @@ export default function Contact() {
           <div className="info-card">
             <span className="info-icon">📞</span>
             <h3>Call Us</h3>
-            <p>07123 456 789</p>
+            <p><a href="tel:+237683115837" style={{ color: 'var(--accent)' }}>+237 6 83 11 58 37</a></p>
             <p className="info-sub">Mon–Fri 9am–6pm</p>
+          </div>
+          <div className="info-card">
+            <span className="info-icon">💬</span>
+            <h3>WhatsApp Support</h3>
+            <p><a href="https://wa.me/237683115837" target="_blank" rel="noopener noreferrer" style={{ color: '#25d366', fontWeight: 600 }}>Chat with Admin</a></p>
+            <p className="info-sub">Fast instant answers</p>
           </div>
           <div className="info-card">
             <span className="info-icon">✉️</span>
             <h3>Email Us</h3>
-            <p>info@williamcharlesmotor.co.uk</p>
+            <p><a href="mailto:williemcharles11@gmail.com" style={{ color: 'var(--text-primary)' }}>williemcharles11@gmail.com</a></p>
             <p className="info-sub">We reply within 24 hours</p>
-          </div>
-          <div className="info-card">
-            <span className="info-icon">📍</span>
-            <h3>Visit Us</h3>
-            <p>123 Motor Lane</p>
-            <p className="info-sub">London, UK</p>
           </div>
         </div>
         <div className="contact-form-section">
@@ -36,7 +36,7 @@ export default function Contact() {
                 <div className="form-group"><label>Email</label><input type="email" placeholder="john@example.com" required /></div>
               </div>
               <div className="form-row">
-                <div className="form-group"><label>Phone</label><input type="tel" placeholder="07123 456 789" /></div>
+                <div className="form-group"><label>Phone</label><input type="tel" placeholder="+237 6 83 11 58 37" /></div>
                 <div className="form-group"><label>Subject</label>
                   <select><option>General Enquiry</option><option>Vehicle Enquiry</option><option>Arrange Viewing</option><option>Sell My Car</option></select>
                 </div>

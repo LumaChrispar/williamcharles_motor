@@ -8,6 +8,12 @@
 .footer-col li { color: var(--text-secondary); font-size: 0.9rem; }
 .footer-col a { color: var(--text-secondary); }
 .footer-col a:hover { color: var(--accent); }
+.footer-vip-unlock-btn {
+  background: none; border: none; color: var(--accent); font-size: 0.9rem;
+  font-family: var(--font-primary); font-weight: 600; text-align: left;
+  cursor: pointer; padding: 0; transition: var(--transition);
+}
+.footer-vip-unlock-btn:hover { color: var(--accent-hover); text-decoration: underline; }
 .social-links { display: flex; gap: 12px; margin-top: 20px; }
 .social-links a {
   width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border-light);
