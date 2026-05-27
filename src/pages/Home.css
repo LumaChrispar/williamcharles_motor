@@ -1,0 +1,45 @@
+.hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; }
+.hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+.hero-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.7) 50%, rgba(10,10,10,0.5) 100%);
+}
+.hero-content { position: relative; z-index: 2; max-width: 700px; padding: 120px 0 80px; }
+.hero-badge {
+  display: inline-block; background: rgba(200,168,78,0.15); color: var(--accent);
+  padding: 8px 20px; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+  margin-bottom: 24px; border: 1px solid rgba(200,168,78,0.3); letter-spacing: 0.05em;
+}
+.hero-content h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+.hero-accent { color: var(--accent); }
+.hero-content p { color: var(--text-secondary); font-size: 1.15rem; margin-bottom: 36px; max-width: 540px; }
+.hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+.stats-section { padding: 60px 0; background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; text-align: center; }
+.stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stat-num { font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--accent); }
+.stat-label { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
+.featured-section { padding: 100px 0; }
+.vehicle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.section-cta { text-align: center; margin-top: 48px; }
+.why-section { padding: 100px 0; background: var(--bg-secondary); }
+.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.why-card {
+  background: var(--bg-card); padding: 32px; border-radius: var(--radius);
+  border: 1px solid var(--border); transition: var(--transition);
+}
+.why-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.why-icon { font-size: 2rem; display: block; margin-bottom: 16px; }
+.why-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.why-card p { color: var(--text-secondary); font-size: 0.9rem; }
+.cta-banner { padding: 100px 0; text-align: center; background: linear-gradient(135deg, rgba(200,168,78,0.08), transparent); }
+.cta-banner h2 { font-size: 2.2rem; margin-bottom: 12px; }
+.cta-banner p { color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 32px; }
+.cta-banner .hero-cta { justify-content: center; }
+@media (max-width: 768px) {
+  .hero-content h1 { font-size: 2.2rem; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .why-grid { grid-template-columns: 1fr; }
+  .vehicle-grid { grid-template-columns: 1fr; }
+}
