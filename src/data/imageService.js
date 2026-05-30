@@ -50,7 +50,7 @@ function cacheKey(make, model) {
 
 // ─── Step 1: Search Wikipedia for best article title ───────────────────────
 async function searchArticleTitle(query) {
-  const url = `/api/wikipedia/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=5&format=json&origin=*`;
+  const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=5&format=json&origin=*`;
   const res = await fetch(url);
   if (!res.ok) return null;
   const data = await res.json();
@@ -60,7 +60,7 @@ async function searchArticleTitle(query) {
 
 // ─── Step 2: Get list of image filenames on that article ────────────────────
 async function getImageFilenames(title) {
-  const url = `/api/wikipedia/w/api.php?action=query&prop=images&titles=${encodeURIComponent(title)}&format=json&imlimit=30&origin=*`;
+  const url = `https://en.wikipedia.org/w/api.php?action=query&prop=images&titles=${encodeURIComponent(title)}&format=json&imlimit=30&origin=*`;
   const res = await fetch(url);
   if (!res.ok) return [];
   const data = await res.json();
@@ -76,7 +76,7 @@ async function resolveImageUrls(filenames) {
   if (filenames.length === 0) return [];
   // API allows up to 50 titles at once
   const batch = filenames.slice(0, 12).join('|');
-  const url = `/api/wikipedia/w/api.php?action=query&titles=${encodeURIComponent(batch)}&prop=imageinfo&iiprop=url&iiurlwidth=900&format=json&origin=*`;
+  const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(batch)}&prop=imageinfo&iiprop=url&iiurlwidth=900&format=json&origin=*`;
   const res = await fetch(url);
   if (!res.ok) return [];
   const data = await res.json();
