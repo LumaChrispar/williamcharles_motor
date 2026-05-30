@@ -6,10 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api/carapi': {
-        target: 'https://carapi.app/api',
+      '/api/wikipedia': {
+        target: 'https://en.wikipedia.org',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/carapi/, '')
+        rewrite: (path) => path.replace(/^\/api\/wikipedia/, '')
       }
     }
   }

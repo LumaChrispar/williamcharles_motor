@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
+import VehicleImage from './VehicleImage';
 import './VehicleCard.css';
 
 export default function VehicleCard({ vehicle }) {
-  const { id, make, model, price, year, mileage, fuelType, transmission, images, sold } = vehicle;
+  const { id, make, model, price, year, mileage, fuelType, transmission, bodyType, sold } = vehicle;
   return (
     <div className={`vehicle-card${sold ? ' sold' : ''}`} id={`vehicle-card-${id}`}>
       <div className="card-image">
-        <img src={images[0]} alt={`${make} ${model}`} loading="lazy" />
+        <VehicleImage make={make} model={model} bodyType={bodyType} alt={`${make} ${model}`} className="card-img" />
         {sold && <div className="sold-badge">SOLD</div>}
         <div className="card-overlay">
           <Link to={`/vehicle/${id}`} className="btn-primary">View Details</Link>
