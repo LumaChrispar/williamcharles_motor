@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { getVehicleById, getRelatedVehicles } from '../data/vehicles';
+import { getVehicleImage } from '../data/imageService';
 import VehicleCard from '../components/VehicleCard';
+import VehicleImage from '../components/VehicleImage';
 import './VehicleDetail.css';
 
 export default function VehicleDetail() {
@@ -9,12 +11,14 @@ export default function VehicleDetail() {
   const [vehicle, setVehicle] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [wikiImages, setWikiImages] = useState([]);
   
   const [activeImg, setActiveImg] = useState(0);
   const [showForm, setShowForm] = useState(null);
 
   useEffect(() => {
     setLoading(true);
+    setWikiImages([]);
     Promise.all([
       getVehicleById(id),
       getRelatedVehicles(id)
@@ -25,6 +29,17 @@ export default function VehicleDetail() {
       setActiveImg(0);
     });
   }, [id]);
+
+  // Fetch Wikipedia image once the vehicle is loaded
+  useEffect(() => {
+    if (!vehicle) return;
+    getVehicleImage(vehicle.make, vehicle.model).then(url => {
+      if (url) setWikiImages([url]);
+      else setWikiImages(vehicle.images || []);
+    }).catch(() => {
+      setWikiImages(vehicle.images || []);
+    });
+  }, [vehicle]);
 
   // Get the chat trigger from App context
   let triggerChat = null;
@@ -80,11 +95,21 @@ export default function VehicleDetail() {
       <div className="detail-content container">
         <div className="detail-gallery" id="gallery">
           <div className="gallery-main">
-            <img src={vehicle.images[activeImg]} alt={`${vehicle.make} ${vehicle.model}`} />
+            {wikiImages.length > 0 ? (
+              <img src={wikiImages[activeImg] || wikiImages[0]} alt={`${vehicle.make} ${vehicle.model}`} />
+            ) : (
+              <VehicleImage
+                make={vehicle.make}
+                model={vehicle.model}
+                bodyType={vehicle.bodyType}
+                alt={`${vehicle.make} ${vehicle.model}`}
+                style={{ width: '100%', height: '100%' }}
+              />
+            )}
           </div>
-          {vehicle.images.length > 1 && (
+          {wikiImages.length > 1 && (
             <div className="gallery-thumbs">
-              {vehicle.images.map((img, i) => (
+              {wikiImages.map((img, i) => (
                 <button key={i} className={`thumb${i === activeImg ? ' active' : ''}`} onClick={() => setActiveImg(i)}>
                   <img src={img} alt="" />
                 </button>
