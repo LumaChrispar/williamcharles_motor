@@ -215,3 +215,23 @@ export function deleteConversation(id) {
   }
   return conversations;
 }
+
+/** Clear all messages within a specific conversation */
+export function clearMessages(conversationId) {
+  const conversations = loadConversations();
+  const conv = conversations.find(c => c.id === conversationId);
+  if (!conv) return null;
+
+  conv.messages = [];
+  conv.unreadAdmin = 0;
+  conv.unreadCustomer = 0;
+  saveConversations(conversations);
+  return conv;
+}
+
+/** Clear all conversations completely */
+export function clearAllConversations() {
+  saveConversations([]);
+  localStorage.removeItem('wc_active_conversation');
+  return [];
+}

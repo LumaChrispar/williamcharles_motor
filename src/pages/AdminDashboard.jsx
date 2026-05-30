@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getConversations, getConversation, addMessage, markAsRead, deleteConversation, getAdminUnreadCount } from '../data/chatStore';
+import { getConversations, getConversation, addMessage, markAsRead, deleteConversation, getAdminUnreadCount, clearMessages, clearAllConversations } from '../data/chatStore';
 import { getInquiries, updateInquiryStatus, deleteInquiry } from '../data/leads';
 import { getVipLeads } from '../data/leads';
 import './AdminDashboard.css';
@@ -73,9 +73,27 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteConversation = (id) => {
-    deleteConversation(id);
-    setConversations(getConversations());
-    if (activeChat?.id === id) setActiveChat(null);
+    if (window.confirm('Are you sure you want to delete this conversation?')) {
+      deleteConversation(id);
+      setConversations(getConversations());
+      if (activeChat?.id === id) setActiveChat(null);
+    }
+  };
+
+  const handleClearMessages = (id) => {
+    if (window.confirm('Are you sure you want to clear all messages in this chat? The customer will also see an empty chat.')) {
+      clearMessages(id);
+      setConversations(getConversations());
+      if (activeChat?.id === id) setActiveChat(getConversation(id));
+    }
+  };
+
+  const handleClearAllConversations = () => {
+    if (window.confirm('Are you sure you want to delete ALL conversations? This cannot be undone.')) {
+      clearAllConversations();
+      setConversations([]);
+      setActiveChat(null);
+    }
   };
 
   const handleInquiryStatus = (id, status) => {
@@ -230,8 +248,15 @@ export default function AdminDashboard() {
             {/* Conversation list */}
             <div className="admin-conv-list">
               <div className="admin-conv-list-header">
-                <h2>Conversations</h2>
-                <span className="admin-conv-count">{conversations.length}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h2>Conversations</h2>
+                  <span className="admin-conv-count">{conversations.length}</span>
+                </div>
+                {conversations.length > 0 && (
+                  <button className="chat-clear-all-btn" onClick={handleClearAllConversations} title="Clear all conversations">
+                    Clear All
+                  </button>
+                )}
               </div>
               <div className="admin-conv-items">
                 {conversations.map(conv => (
@@ -286,12 +311,21 @@ export default function AdminDashboard() {
                         <span className="chat-car-price">£{activeChat.vehicle.price.toLocaleString()}</span>
                       </div>
                     </div>
-                    <button className="chat-delete-btn" onClick={() => handleDeleteConversation(activeChat.id)} title="Delete conversation">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                      </svg>
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button className="chat-action-btn" onClick={() => handleClearMessages(activeChat.id)} title="Clear all messages in this chat">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"/>
+                          <line x1="15" y1="9" x2="9" y2="15"/>
+                          <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                      </button>
+                      <button className="chat-action-btn chat-delete-btn" onClick={() => handleDeleteConversation(activeChat.id)} title="Delete conversation">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   <div className="admin-chat-messages">
                     {activeChat.messages.map(msg => (
