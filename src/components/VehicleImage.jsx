@@ -1,41 +1,38 @@
 import { useState, useEffect, useRef } from 'react';
 import { getVehicleImage } from '../data/imageService';
 
-const BODY_FALLBACKS = {
-  Saloon: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80',
-  SUV: 'https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?auto=format&fit=crop&w=800&q=80',
-  Coupe: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
-  Hatchback: 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=800&q=80',
-  Convertible: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3b?auto=format&fit=crop&w=800&q=80',
-  DEFAULT: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80',
-};
-
 /**
- * VehicleImage - lazy-loads a Wikipedia image for the given make/model.
- * Falls back to a premium Unsplash image on error or miss.
- * Uses IntersectionObserver to only start fetching when visible.
+ * VehicleImage — fetches the real Wikipedia image for a car.
+ * Shows a shimmer skeleton while loading.
+ * If Wikipedia has no image, shows a clean branded "No Photo" placeholder
+ * instead of a generic fallback.
  */
 export default function VehicleImage({ make, model, bodyType, alt, className, style }) {
   const [src, setSrc] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
   const ref = useRef(null);
-  
-  const fallback = BODY_FALLBACKS[bodyType] || BODY_FALLBACKS.DEFAULT;
 
   useEffect(() => {
     let cancelled = false;
+    setSrc(null);
+    setLoaded(false);
+    setFailed(false);
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           observer.disconnect();
           getVehicleImage(make, model).then(url => {
-            if (!cancelled) setSrc(url || fallback);
+            if (cancelled) return;
+            if (url) setSrc(url);
+            else setFailed(true);
           }).catch(() => {
-            if (!cancelled) setSrc(fallback);
+            if (!cancelled) setFailed(true);
           });
         }
       },
-      { rootMargin: '200px' } // Start loading 200px before the image enters viewport
+      { rootMargin: '300px' }
     );
 
     if (ref.current) observer.observe(ref.current);
@@ -43,10 +40,12 @@ export default function VehicleImage({ make, model, bodyType, alt, className, st
       cancelled = true;
       observer.disconnect();
     };
-  }, [make, model, fallback]);
+  }, [make, model]);
 
   const handleError = () => {
-    setSrc(fallback);
+    // Image URL returned but failed to load — show placeholder
+    setSrc(null);
+    setFailed(true);
   };
 
   return (
@@ -55,7 +54,7 @@ export default function VehicleImage({ make, model, bodyType, alt, className, st
       className={`vehicle-img-wrapper${loaded ? ' loaded' : ''}`}
       style={style}
     >
-      {src ? (
+      {src && !failed ? (
         <img
           src={src}
           alt={alt}
@@ -64,8 +63,19 @@ export default function VehicleImage({ make, model, bodyType, alt, className, st
           onError={handleError}
           loading="lazy"
         />
+      ) : failed ? (
+        /* Clean branded placeholder — no random stock photos */
+        <div className="vehicle-img-placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+            <path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/>
+            <rect x="9" y="11" width="14" height="10" rx="2"/>
+            <circle cx="12" cy="17" r="1"/>
+            <circle cx="20" cy="17" r="1"/>
+          </svg>
+          <span>{make} {model}</span>
+        </div>
       ) : (
-        // Skeleton shimmer while loading
+        /* Shimmer while fetching */
         <div className="vehicle-img-skeleton" />
       )}
     </div>

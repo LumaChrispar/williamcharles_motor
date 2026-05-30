@@ -1,8 +1,9 @@
-// Wikipedia Image Service
-// Fetches the primary thumbnail image for a given car make+model
-// Results are cached in localStorage so each query only runs once per session
+// Wikipedia Image Service — v2
+// Step 1: Use Wikipedia search to find the best matching article for "Make Model"
+// Step 2: Fetch the pageimage from that article
+// Results are cached in localStorage for 7 days
 
-const CACHE_KEY = 'wc_img_cache';
+const CACHE_KEY = 'wc_img_cache_v2';
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function loadCache() {
@@ -20,10 +21,9 @@ function loadCache() {
 function saveCache(data) {
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify({ data, savedAt: Date.now() }));
-  } catch { /* quota exceeded — skip caching */ }
+  } catch { /* quota exceeded */ }
 }
 
-// In-memory cache for this session
 let memCache = null;
 
 function getCache() {
@@ -31,7 +31,7 @@ function getCache() {
   return memCache;
 }
 
-function setCache(key, value) {
+function setCacheEntry(key, value) {
   const cache = getCache();
   cache[key] = value;
   memCache = cache;
@@ -39,74 +39,79 @@ function setCache(key, value) {
 }
 
 /**
- * Fetch a Wikipedia thumbnail for a given make + model.
- * Returns an image URL string, or null if not found.
+ * Step 1: Search Wikipedia for the car, return the best article title
  */
-async function fetchWikipediaImage(make, model) {
-  // Try two search terms: "Make Model" and "Make Model car"
-  const queries = [
-    `${make} ${model}`,
-    `${make} ${model} car`,
-  ];
+async function searchWikipedia(query) {
+  const url = `/api/wikipedia/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=5&format=json&origin=*`;
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const data = await res.json();
+  const results = data?.query?.search;
+  if (!results || results.length === 0) return null;
 
-  for (const query of queries) {
-    try {
-      const url = `/api/wikipedia/w/api.php?action=query&prop=pageimages&format=json&pithumbsize=900&titles=${encodeURIComponent(query)}&origin=*`;
-      const res = await fetch(url);
-      if (!res.ok) continue;
-      const data = await res.json();
-      const pages = data?.query?.pages;
-      if (!pages) continue;
-      
-      const page = Object.values(pages)[0];
-      if (page?.thumbnail?.source) {
-        // Filter out obviously wrong images (logos, flags, etc.)
-        const src = page.thumbnail.source;
-        const lower = src.toLowerCase();
-        if (lower.includes('logo') || lower.includes('flag') || lower.includes('map')) continue;
-        return src;
-      }
-    } catch {
-      // Silently continue on network error
-    }
-  }
-  return null;
+  // Pick the first result — it's almost always the right one for Make+Model searches
+  return results[0].title;
 }
 
 /**
- * Get image URL for a vehicle (with caching).
- * Falls back to null if Wikipedia has nothing useful.
+ * Step 2: Given an exact Wikipedia article title, get its thumbnail image
+ */
+async function getPageImage(title) {
+  const url = `/api/wikipedia/w/api.php?action=query&prop=pageimages&format=json&pithumbsize=900&titles=${encodeURIComponent(title)}&origin=*`;
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const data = await res.json();
+  const pages = data?.query?.pages;
+  if (!pages) return null;
+
+  const page = Object.values(pages)[0];
+  if (!page?.thumbnail?.source) return null;
+
+  const src = page.thumbnail.source;
+  // Filter out non-car images (icons, maps, logos, people, flags)
+  const lower = src.toLowerCase();
+  if (lower.includes('logo') || lower.includes('flag') || lower.includes('map') || lower.includes('coat_of_arms')) {
+    return null;
+  }
+  return src;
+}
+
+/**
+ * Main export: get a Wikipedia image for a vehicle make + model
+ * Uses a 2-step search → image approach for much better accuracy
  */
 export async function getVehicleImage(make, model) {
-  const cacheKey = `${make}__${model}`.toLowerCase().replace(/\s+/g, '_');
+  const cacheKey = `${make}__${model}`.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
   const cache = getCache();
-  
-  // Return cached result (even if it's null — so we don't retry known misses)
+
+  // Return cached result (null means we already tried and failed)
   if (Object.prototype.hasOwnProperty.call(cache, cacheKey)) {
     return cache[cacheKey];
   }
 
-  const img = await fetchWikipediaImage(make, model);
-  setCache(cacheKey, img);
-  return img;
-}
+  // Try progressively simplified search queries
+  const searchQueries = [
+    `${make} ${model}`,               // e.g. "Ferrari SF90 STRADALE"
+    `${make} ${model.split(' ')[0]}`, // e.g. "Ferrari SF90"
+    `${make} ${model.split(' ').slice(0, 2).join(' ')}`, // First 2 words of model
+  ];
 
-/**
- * Preload images for a batch of vehicles (for showroom loading)
- * Runs in parallel but respects browser concurrency limits via chunking
- */
-export async function preloadVehicleImages(vehicles, chunkSize = 5) {
-  const chunks = [];
-  for (let i = 0; i < vehicles.length; i += chunkSize) {
-    chunks.push(vehicles.slice(i, i + chunkSize));
+  for (const query of searchQueries) {
+    try {
+      const title = await searchWikipedia(query);
+      if (!title) continue;
+
+      const img = await getPageImage(title);
+      if (img) {
+        setCacheEntry(cacheKey, img);
+        return img;
+      }
+    } catch {
+      // Continue to next query
+    }
   }
 
-  const results = {};
-  for (const chunk of chunks) {
-    await Promise.all(chunk.map(async (v) => {
-      const img = await getVehicleImage(v.make, v.model);
-      results[`${v.make}__${v.model}`.toLowerCase().replace(/\s+/g, '_')] = img;
-    }));
-  }
-  return results;
+  // Cache the failure so we don't retry endlessly
+  setCacheEntry(cacheKey, null);
+  return null;
 }
