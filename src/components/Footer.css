@@ -25,9 +25,21 @@
   border-top: 1px solid var(--border); padding: 24px 0;
   display: flex; justify-content: space-between; align-items: center;
 }
-.footer-bottom p { color: var(--text-muted); font-size: 0.85rem; }
+.footer-bottom p { color: var(--text-muted); font-size: 0.85rem; transition: color 0.2s; }
+.footer-bottom p:active { color: var(--accent); }
 .footer-bottom a { color: var(--text-muted); font-size: 0.85rem; }
 .footer-bottom a:hover { color: var(--accent); }
+.secret-admin-link {
+  color: var(--text-muted) !important;
+  opacity: 0.2;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+}
+.secret-admin-link:hover {
+  opacity: 0.8;
+  color: var(--accent) !important;
+}
 @media (max-width: 768px) {
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }

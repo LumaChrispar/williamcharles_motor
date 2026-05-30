@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
@@ -21,6 +21,7 @@ function ScrollToTop() {
 
 export default function App() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   // Vehicle-to-chat state — lifted up so VehicleDetail can trigger the ChatWidget
@@ -34,6 +35,18 @@ export default function App() {
     window.addEventListener('openChatWithVehicle', handler);
     return () => window.removeEventListener('openChatWithVehicle', handler);
   }, []);
+
+  // Hidden Keyboard Shortcut (Ctrl+Shift+A or Cmd+Shift+A) to access Admin Panel
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        navigate('/admin');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
 
   return (
     <>
