@@ -24,21 +24,14 @@
   width: 20px; height: 2px; background: var(--accent); border-radius: 1px;
 }
 .header-contact { display: flex; align-items: center; gap: 16px; }
-.header-whatsapp {
-  background: #25d366; color: #ffffff; padding: 6px 14px; border-radius: 50px;
-  font-size: 0.85rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  box-shadow: 0 4px 12px rgba(37,211,102,0.2); display: flex; align-items: center; gap: 4px;
-}
-.header-whatsapp:hover { background: #20ba5a; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37,211,102,0.3); }
-.header-phone { font-size: 0.9rem; color: var(--accent); font-weight: 600; white-space: nowrap; }
-.header-phone:hover { color: var(--accent-hover); }
-.btn-unlock-vip-header {
+.header-contact-btn {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-  color: #0a0a0a; padding: 8px 16px; border-radius: 50px; font-size: 0.8rem;
-  font-weight: 700; border: none; cursor: pointer; transition: var(--transition);
+  color: #0a0a0a; padding: 8px 20px; border-radius: 50px; font-size: 0.85rem;
+  font-weight: 700; transition: var(--transition);
   box-shadow: 0 4px 12px rgba(200, 168, 78, 0.25);
+  display: flex; align-items: center; gap: 6px;
 }
-.btn-unlock-vip-header:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(200, 168, 78, 0.4); }
+.header-contact-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(200, 168, 78, 0.4); color: #0a0a0a; }
 .hamburger { display: none; flex-direction: column; gap: 5px; padding: 8px; background: none; }
 .hamburger span { display: block; width: 24px; height: 2px; background: var(--text-primary); transition: var(--transition); border-radius: 1px; }
 .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }

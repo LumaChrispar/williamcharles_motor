@@ -20,21 +20,16 @@
   background: var(--bg-card); border: 1px solid var(--border); padding: 6px 14px;
   border-radius: 50px; font-size: 0.8rem; color: var(--text-secondary);
 }
-.premium-quick-reach { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-.btn-whatsapp-premium {
-  background: #25d366; color: #ffffff; padding: 12px; text-align: center;
-  border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  box-shadow: 0 4px 14px rgba(37,211,102,0.3); transition: var(--transition);
+.premium-quick-reach { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
+.btn-chat-car {
+  background: linear-gradient(135deg, #c8a84e, #a08530); color: #0a0a0a; padding: 14px 24px;
+  text-align: center; border-radius: var(--radius-sm); font-weight: 700; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 4px 20px rgba(200,168,78,0.3); transition: var(--transition);
+  cursor: pointer; border: none; font-family: var(--font-primary); letter-spacing: 0.02em;
 }
-.btn-whatsapp-premium:hover { background: #20ba5a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
-.btn-sms-premium {
-  background: #007aff; color: #ffffff; padding: 12px; text-align: center;
-  border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  box-shadow: 0 4px 14px rgba(0,122,255,0.3); transition: var(--transition);
-}
-.btn-sms-premium:hover { background: #0062cc; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,122,255,0.4); }
+.btn-chat-car:hover { background: linear-gradient(135deg, #dbb85e, #c8a84e); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(200,168,78,0.45); }
+.btn-chat-car .icon { font-size: 1.2rem; }
 .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
 .spec-item { background: var(--bg-card); padding: 14px 18px; display: flex; justify-content: space-between; }
 .spec-label { color: var(--text-secondary); font-size: 0.85rem; }

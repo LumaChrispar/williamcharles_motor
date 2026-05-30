@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
+import ChatWidget from './components/ChatWidget';
 import Home from './pages/Home';
 import Showroom from './pages/Showroom';
 import VehicleDetail from './pages/VehicleDetail';
 import PreviouslySold from './pages/PreviouslySold';
 import SellYourCar from './pages/SellYourCar';
 import Contact from './pages/Contact';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -17,10 +20,25 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  // Vehicle-to-chat state — lifted up so VehicleDetail can trigger the ChatWidget
+  const [vehicleToChat, setVehicleToChat] = useState(null);
+
+  // Listen for custom events from VehicleDetail
+  useEffect(() => {
+    const handler = (e) => {
+      setVehicleToChat(e.detail);
+    };
+    window.addEventListener('openChatWithVehicle', handler);
+    return () => window.removeEventListener('openChatWithVehicle', handler);
+  }, []);
+
   return (
     <>
       <ScrollToTop />
-      <Header />
+      {!isAdminRoute && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/showroom" element={<Showroom />} />
@@ -28,9 +46,17 @@ export default function App() {
         <Route path="/previously-sold" element={<PreviouslySold />} />
         <Route path="/sell-your-car" element={<SellYourCar />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
-      <Footer />
-      <CookieConsent />
+      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <CookieConsent />}
+      {!isAdminRoute && (
+        <ChatWidget
+          vehicleToChat={vehicleToChat}
+          onChatOpened={() => setVehicleToChat(null)}
+        />
+      )}
     </>
   );
 }

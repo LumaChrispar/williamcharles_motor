@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { getVehicleById, getRelatedVehicles } from '../data/vehicles';
 import VehicleCard from '../components/VehicleCard';
 import './VehicleDetail.css';
@@ -10,6 +10,15 @@ export default function VehicleDetail() {
   const related = getRelatedVehicles(id);
   const [activeImg, setActiveImg] = useState(0);
   const [showForm, setShowForm] = useState(null);
+
+  // Get the chat trigger from App context
+  let triggerChat = null;
+  try {
+    const ctx = useOutletContext();
+    if (ctx) triggerChat = ctx.triggerChat;
+  } catch {
+    // Not inside an Outlet, that's fine
+  }
 
   if (!vehicle) return (
     <main className="detail-page"><div className="container" style={{ paddingTop: '160px', textAlign: 'center' }}>
@@ -33,12 +42,14 @@ export default function VehicleDetail() {
     { label: 'Road Tax', value: vehicle.roadTax },
   ];
 
-  // Pre-configured custom WhatsApp URL with pre-filled premium enquiry text
-  const whatsappText = encodeURIComponent(`Hello williamcharles_motor! I am extremely interested in purchasing the ${vehicle.make} ${vehicle.model} (${vehicle.year}) listed for £${vehicle.price.toLocaleString()}. Please let me know how to proceed.`);
-  const whatsappUrl = `https://wa.me/237683115837?text=${whatsappText}`;
-
-  // Direct SMS / Text message pre-filled link
-  const smsUrl = `sms:+237683115837?body=${whatsappText}`;
+  const handleChatAboutCar = () => {
+    if (triggerChat) {
+      triggerChat(vehicle);
+    } else {
+      // Fallback: dispatch a custom event for the ChatWidget
+      window.dispatchEvent(new CustomEvent('openChatWithVehicle', { detail: vehicle }));
+    }
+  };
 
   return (
     <main className="detail-page">
@@ -70,14 +81,11 @@ export default function VehicleDetail() {
             <span>{vehicle.bodyType}</span><span>{vehicle.doors} doors</span>
           </div>
           
-          {/* Quick Premium Access Reachout Buttons */}
+          {/* Chat About This Car Button */}
           <div className="premium-quick-reach">
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-whatsapp-premium">
-              <span className="icon">💬</span> Chat on WhatsApp
-            </a>
-            <a href={smsUrl} className="btn-sms-premium">
-              <span className="icon">📱</span> Text Admin Direct
-            </a>
+            <button onClick={handleChatAboutCar} className="btn-chat-car">
+              <span className="icon">💬</span> Chat About This Car
+            </button>
           </div>
 
           <div className="specs-grid">
