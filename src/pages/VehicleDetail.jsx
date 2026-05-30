@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { getVehicleById, getRelatedVehicles } from '../data/vehicles';
 import VehicleCard from '../components/VehicleCard';
@@ -6,10 +6,25 @@ import './VehicleDetail.css';
 
 export default function VehicleDetail() {
   const { id } = useParams();
-  const vehicle = getVehicleById(id);
-  const related = getRelatedVehicles(id);
+  const [vehicle, setVehicle] = useState(null);
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
   const [activeImg, setActiveImg] = useState(0);
   const [showForm, setShowForm] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([
+      getVehicleById(id),
+      getRelatedVehicles(id)
+    ]).then(([v, r]) => {
+      setVehicle(v);
+      setRelated(r);
+      setLoading(false);
+      setActiveImg(0);
+    });
+  }, [id]);
 
   // Get the chat trigger from App context
   let triggerChat = null;
@@ -19,6 +34,12 @@ export default function VehicleDetail() {
   } catch {
     // Not inside an Outlet, that's fine
   }
+
+  if (loading) return (
+    <main className="detail-page"><div className="container" style={{ paddingTop: '160px', textAlign: 'center' }}>
+      <div className="loading-spinner">Loading vehicle details...</div>
+    </div></main>
+  );
 
   if (!vehicle) return (
     <main className="detail-page"><div className="container" style={{ paddingTop: '160px', textAlign: 'center' }}>

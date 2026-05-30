@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminLogin.css';
 
@@ -17,10 +17,11 @@ export default function AdminLogin() {
   const navigate = useNavigate();
 
   // Check if already authenticated
-  if (localStorage.getItem('wc_admin_auth') === 'true') {
-    navigate('/admin/dashboard', { replace: true });
-    return null;
-  }
+  useEffect(() => {
+    if (localStorage.getItem('wc_admin_auth') === 'true') {
+      navigate('/admin/dashboard', { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

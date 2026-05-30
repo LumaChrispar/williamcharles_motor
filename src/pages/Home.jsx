@@ -1,10 +1,19 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getFeaturedVehicles } from '../data/vehicles';
 import VehicleCard from '../components/VehicleCard';
 import './Home.css';
 
 export default function Home() {
-  const featured = getFeaturedVehicles();
+  const [featured, setFeatured] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getFeaturedVehicles().then(data => {
+      setFeatured(data);
+      setLoading(false);
+    });
+  }, []);
   return (
     <main className="home-page">
       <section className="hero" id="hero">
@@ -46,9 +55,13 @@ export default function Home() {
             <p>Our handpicked selection of premium vehicles currently available</p>
             <div className="gold-line" />
           </div>
-          <div className="vehicle-grid">
-            {featured.map(v => <VehicleCard key={v.id} vehicle={v} />)}
-          </div>
+          {loading ? (
+            <div className="loading-spinner" style={{ textAlign: 'center', padding: '40px' }}>Loading premium vehicles...</div>
+          ) : (
+            <div className="vehicle-grid">
+              {featured.map(v => <VehicleCard key={v.id} vehicle={v} />)}
+            </div>
+          )}
           <div className="section-cta">
             <Link to="/showroom" className="btn-secondary">View All Vehicles →</Link>
           </div>
