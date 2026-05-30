@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { getVehicleById, getRelatedVehicles } from '../data/vehicles';
-import { getVehicleImage } from '../data/imageService';
+import { getVehicleImages } from '../data/imageService';
 import VehicleCard from '../components/VehicleCard';
-import VehicleImage from '../components/VehicleImage';
 import './VehicleDetail.css';
 
 export default function VehicleDetail() {
@@ -12,6 +11,7 @@ export default function VehicleDetail() {
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [wikiImages, setWikiImages] = useState([]);
+  const [imagesLoading, setImagesLoading] = useState(true);
   
   const [activeImg, setActiveImg] = useState(0);
   const [showForm, setShowForm] = useState(null);
@@ -30,14 +30,17 @@ export default function VehicleDetail() {
     });
   }, [id]);
 
-  // Fetch Wikipedia image once the vehicle is loaded
+  // Fetch all Wikipedia images for carousel once vehicle is loaded
   useEffect(() => {
     if (!vehicle) return;
-    getVehicleImage(vehicle.make, vehicle.model).then(url => {
-      if (url) setWikiImages([url]);
-      else setWikiImages(vehicle.images || []);
+    setImagesLoading(true);
+    setWikiImages([]);
+    setActiveImg(0);
+    getVehicleImages(vehicle.make, vehicle.model).then(urls => {
+      setWikiImages(urls.length > 0 ? urls : []);
+      setImagesLoading(false);
     }).catch(() => {
-      setWikiImages(vehicle.images || []);
+      setImagesLoading(false);
     });
   }, [vehicle]);
 
@@ -95,19 +98,23 @@ export default function VehicleDetail() {
       <div className="detail-content container">
         <div className="detail-gallery" id="gallery">
           <div className="gallery-main">
-            {wikiImages.length > 0 ? (
+            {imagesLoading ? (
+              <div className="vehicle-img-skeleton" style={{ width: '100%', height: '100%' }} />
+            ) : wikiImages.length > 0 ? (
               <img src={wikiImages[activeImg] || wikiImages[0]} alt={`${vehicle.make} ${vehicle.model}`} />
             ) : (
-              <VehicleImage
-                make={vehicle.make}
-                model={vehicle.model}
-                bodyType={vehicle.bodyType}
-                alt={`${vehicle.make} ${vehicle.model}`}
-                style={{ width: '100%', height: '100%' }}
-              />
+              <div className="vehicle-img-placeholder" style={{ height: '100%' }}>
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+                  <path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/>
+                  <rect x="9" y="11" width="14" height="10" rx="2"/>
+                  <circle cx="12" cy="17" r="1"/>
+                  <circle cx="20" cy="17" r="1"/>
+                </svg>
+                <span style={{ fontSize: '1rem', marginTop: '10px' }}>No photos available</span>
+              </div>
             )}
           </div>
-          {wikiImages.length > 1 && (
+          {!imagesLoading && wikiImages.length > 1 && (
             <div className="gallery-thumbs">
               {wikiImages.map((img, i) => (
                 <button key={i} className={`thumb${i === activeImg ? ' active' : ''}`} onClick={() => setActiveImg(i)}>
