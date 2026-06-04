@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getVehicleImage } from '../data/imageService';
 
 /**
- * VehicleImage — fetches the real Wikipedia image for a car.
+ * VehicleImage fetches the real Wikipedia image for a car.
  * Shows a shimmer skeleton while loading.
  * If Wikipedia has no image, shows a clean branded "No Photo" placeholder
  * instead of a generic fallback.
@@ -43,7 +43,7 @@ export default function VehicleImage({ make, model, bodyType, alt, className, st
   }, [make, model]);
 
   const handleError = () => {
-    // Image URL returned but failed to load — show placeholder
+    // Image URL returned but failed to load show placeholder
     setSrc(null);
     setFailed(true);
   };
