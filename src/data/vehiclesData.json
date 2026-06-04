@@ -431,30 +431,7 @@
     "featured": false,
     "description": "Introducing an absolutely stunning 2024 TOYOTA GR SUPRA. This carefully selected vehicle boasts a high-spec options pack, including an upgraded smart suspension, customizable dynamic driver assistance, high-fidelity premium acoustics, and pristine luxury cabin trim."
   },
-  {
-    "id": 19,
-    "make": "TOYOTA",
-    "model": "TOYOTA 86",
-    "price": 27000,
-    "year": 2024,
-    "mileage": 5067,
-    "fuelType": "Petrol",
-    "transmission": "Automatic",
-    "drivetrain": "AWD",
-    "engineSize": "BOXER-4",
-    "enginePower": "205 bhp",
-    "acceleration": "6.4 sec",
-    "topSpeed": "226 km/h",
-    "mpg": "35 mpg",
-    "ulezCompliant": true,
-    "roadTax": "£180/year",
-    "color": "Obsidian Black",
-    "bodyType": "Coupe",
-    "doors": 2,
-    "sold": false,
-    "featured": false,
-    "description": "Introducing an absolutely stunning 2024 TOYOTA TOYOTA 86. This carefully selected vehicle boasts a high-spec options pack, including an upgraded smart suspension, customizable dynamic driver assistance, high-fidelity premium acoustics, and pristine luxury cabin trim."
-  },
+  
   {
     "id": 20,
     "make": "TOYOTA",

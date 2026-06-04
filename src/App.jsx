@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
 import ChatWidget from './components/ChatWidget';
+import WelcomeOnboarding from './components/WelcomeOnboarding';
 import Home from './pages/Home';
 import Showroom from './pages/Showroom';
 import VehicleDetail from './pages/VehicleDetail';
@@ -70,6 +71,7 @@ export default function App() {
           onChatOpened={() => setVehicleToChat(null)}
         />
       )}
+      {!isAdminRoute && <WelcomeOnboarding />}
     </>
   );
 }

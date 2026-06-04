@@ -48,7 +48,7 @@ export async function fetchAllVehicles() {
 
 export const getAvailableVehicles = async () => {
   const cars = await fetchAllVehicles();
-  return cars.filter(v => !v.sold);
+  return cars.filter(v => !v.sold && v.price <= 100000);
 };
 
 export const getSoldVehicles = async () => {
@@ -58,7 +58,10 @@ export const getSoldVehicles = async () => {
 
 export const getFeaturedVehicles = async () => {
   const cars = await fetchAllVehicles();
-  return cars.filter(v => v.featured && !v.sold).slice(0, 12);
+  return cars
+    .filter(v => !v.sold && v.price >= 30000 && v.price <= 70000)
+    .sort((a, b) => b.price - a.price)
+    .slice(0, 6);
 };
 
 export const getVehicleById = async (id) => {

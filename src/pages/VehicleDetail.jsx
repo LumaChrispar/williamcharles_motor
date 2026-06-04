@@ -37,7 +37,7 @@ export default function VehicleDetail() {
     setWikiImages([]);
     setActiveImg(0);
     getVehicleImages(vehicle.make, vehicle.model).then(urls => {
-      setWikiImages(urls.length > 0 ? urls : []);
+      setWikiImages(urls.length > 0 ? urls.slice(0, 4) : []);
       setImagesLoading(false);
     }).catch(() => {
       setImagesLoading(false);
@@ -154,7 +154,6 @@ export default function VehicleDetail() {
             <p>{vehicle.description}</p>
           </div>
           <div className="detail-actions">
-            <button className="btn-primary" onClick={() => setShowForm('viewing')}>Arrange Viewing</button>
             <button className="btn-secondary" onClick={() => setShowForm('enquiry')}>Contact Us</button>
           </div>
           <div className="detail-share">
@@ -170,16 +169,15 @@ export default function VehicleDetail() {
         <div className="modal-overlay" onClick={() => setShowForm(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setShowForm(null)}>✕</button>
-            <h2>{showForm === 'viewing' ? 'Arrange a Viewing' : 'Contact Us'}</h2>
+            <h2>Contact Us</h2>
             <p className="modal-sub">Re: {vehicle.make} {vehicle.model}</p>
             <form onSubmit={e => { e.preventDefault(); alert('Thank you! We will be in touch shortly.'); setShowForm(null); }}>
               <input type="text" placeholder="Full Name" required />
               <input type="email" placeholder="Email Address" required />
               <input type="tel" placeholder="Phone Number" required />
-              {showForm === 'viewing' && <input type="date" placeholder="Preferred Date" />}
               <textarea placeholder="Your message..." rows={4}></textarea>
               <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                {showForm === 'viewing' ? 'Request Viewing' : 'Send Enquiry'}
+                Send Enquiry
               </button>
             </form>
           </div>

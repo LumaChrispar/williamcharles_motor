@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { getAvailableVehicles, getAllMakes, getAllBodyTypes } from '../data/vehicles';
 import VehicleCard from '../components/VehicleCard';
+import AnimatedSection from '../components/AnimatedSection';
 import './Showroom.css';
 
 export default function Showroom() {
@@ -51,10 +52,10 @@ export default function Showroom() {
   return (
     <main className="showroom-page">
       <section className="showroom-hero">
-        <div className="container">
+        <AnimatedSection className="container" animation="fade-up">
           <h1>Our Showroom</h1>
           <p>Browse our complete collection of premium pre-owned vehicles</p>
-        </div>
+        </AnimatedSection>
       </section>
       <section className="showroom-content container">
         <aside className="filters-panel" id="filters">
@@ -118,10 +119,16 @@ export default function Showroom() {
             <div className="loading-spinner" style={{ textAlign: 'center', padding: '60px' }}>Loading showroom vehicles...</div>
           ) : (
             <>
+              <AnimatedSection animation="fade-in">
               <p className="results-count">{filtered.length} vehicle{filtered.length !== 1 ? 's' : ''} found</p>
               <div className="vehicle-grid">
-                {filtered.slice(0, visibleCount).map(v => <VehicleCard key={v.id} vehicle={v} />)}
+                {filtered.slice(0, visibleCount).map((v, i) => (
+                  <div key={v.id} style={{ animationDelay: `${(i % 8) * 100}ms` }} className="animate-section fade-up is-visible">
+                    <VehicleCard vehicle={v} />
+                  </div>
+                ))}
               </div>
+            </AnimatedSection>
               {filtered.length === 0 && <div className="no-results"><p>No vehicles match your criteria. Try adjusting your filters.</p></div>}
               {visibleCount < filtered.length && (
                 <div className="load-more">
