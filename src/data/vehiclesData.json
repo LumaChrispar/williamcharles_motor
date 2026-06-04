@@ -431,7 +431,7 @@
     "featured": false,
     "description": "Introducing an absolutely stunning 2024 TOYOTA GR SUPRA. This carefully selected vehicle boasts a high-spec options pack, including an upgraded smart suspension, customizable dynamic driver assistance, high-fidelity premium acoustics, and pristine luxury cabin trim."
   },
-  
+
   {
     "id": 20,
     "make": "TOYOTA",
@@ -5761,30 +5761,6 @@
     "description": "Introducing an absolutely stunning 2024 TOYOTA INNOVA HYCROSS. This carefully selected vehicle boasts a high-spec options pack, including an upgraded smart suspension, customizable dynamic driver assistance, high-fidelity premium acoustics, and pristine luxury cabin trim."
   },
   {
-    "id": 242,
-    "make": "TOYOTA",
-    "model": "COASTER",
-    "price": 70000,
-    "year": 2024,
-    "mileage": 6145,
-    "fuelType": "Diesel",
-    "transmission": "Automatic",
-    "drivetrain": "AWD",
-    "engineSize": "4.0L,DIESEL",
-    "enginePower": "134 bhp",
-    "acceleration": "N/A",
-    "topSpeed": "120 km/h",
-    "mpg": "35 mpg",
-    "ulezCompliant": true,
-    "roadTax": "£180/year",
-    "color": "Obsidian Black",
-    "bodyType": "Saloon",
-    "doors": 5,
-    "sold": false,
-    "featured": false,
-    "description": "Introducing an absolutely stunning 2024 TOYOTA COASTER. This carefully selected vehicle boasts a high-spec options pack, including an upgraded smart suspension, customizable dynamic driver assistance, high-fidelity premium acoustics, and pristine luxury cabin trim."
-  },
-  {
     "id": 243,
     "make": "TOYOTA",
     "model": "URBAN CRUISER TAISOR",
@@ -9024,30 +9000,7 @@
     "featured": false,
     "description": "Introducing an absolutely stunning 2024 Volkswagen Up! e-up!. This carefully selected vehicle boasts a high-spec options pack, including an upgraded smart suspension, customizable dynamic driver assistance, high-fidelity premium acoustics, and pristine luxury cabin trim."
   },
-  {
-    "id": 378,
-    "make": "Volkswagen",
-    "model": "Amarok V8",
-    "price": 70000,
-    "year": 2024,
-    "mileage": 15119,
-    "fuelType": "Diesel",
-    "transmission": "Automatic",
-    "drivetrain": "AWD",
-    "engineSize": "4.0L V8 Turbo Diesel",
-    "enginePower": "310 bhp",
-    "acceleration": "7.4 sec",
-    "topSpeed": "210 km/h",
-    "mpg": "35 mpg",
-    "ulezCompliant": true,
-    "roadTax": "£180/year",
-    "color": "Obsidian Black",
-    "bodyType": "Saloon",
-    "doors": 5,
-    "sold": false,
-    "featured": false,
-    "description": "Introducing an absolutely stunning 2024 Volkswagen Amarok V8. This carefully selected vehicle boasts a high-spec options pack, including an upgraded smart suspension, customizable dynamic driver assistance, high-fidelity premium acoustics, and pristine luxury cabin trim."
-  },
+  
   {
     "id": 379,
     "make": "Volkswagen",
