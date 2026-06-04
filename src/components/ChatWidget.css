@@ -348,11 +348,20 @@
     bottom: 16px;
     right: 16px;
   }
-  .chat-widget-panel {
-    width: calc(100vw - 32px);
-    max-height: 80vh;
-    bottom: 72px;
-    right: -8px;
+  .chat-widget-panel.open {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    z-index: 99999;
+    transform: none;
+    border: none;
+  }
+  .chat-widget-messages {
+    max-height: none;
+    height: 100%;
   }
   .chat-widget-fab {
     width: 52px;

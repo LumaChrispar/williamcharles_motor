@@ -51,5 +51,9 @@
 .card-specs { display: flex; flex-wrap: wrap; gap: 12px; }
 .card-specs span { font-size: 0.8rem; color: var(--text-secondary); }
 @media (max-width: 480px) {
-  .card-title-row { flex-direction: column; }
+  .card-title-row { flex-direction: column; gap: 4px; margin-bottom: 16px; }
+  .card-price { font-size: 1rem; }
+  .card-specs { gap: 8px; }
+  .card-body { padding: 16px; }
+  .sold-badge { padding: 4px 12px; font-size: 0.75rem; }
 }

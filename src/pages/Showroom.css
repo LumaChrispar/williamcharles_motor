@@ -26,5 +26,10 @@
 .load-more { text-align: center; margin-top: 40px; }
 @media (max-width: 900px) {
   .showroom-content { grid-template-columns: 1fr; }
-  .filters-panel { position: static; }
+  .filters-panel { position: static; margin-bottom: 24px; }
+}
+@media (max-width: 480px) {
+  .showroom-hero { padding: 40px 0 24px; }
+  .showroom-hero h1 { font-size: 2rem; }
+  .price-row { grid-template-columns: 1fr; }
 }

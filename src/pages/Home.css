@@ -38,8 +38,16 @@
 .cta-banner p { color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 32px; }
 .cta-banner .hero-cta { justify-content: center; }
 @media (max-width: 768px) {
+  .hero-content { padding: 100px 0 60px; }
   .hero-content h1 { font-size: 2.2rem; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .why-grid { grid-template-columns: 1fr; }
   .vehicle-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .hero-content { padding: 80px 0 40px; }
+  .hero-content h1 { font-size: 1.8rem; }
+  .stats-grid { grid-template-columns: 1fr; gap: 24px; }
+  .hero-cta { flex-direction: column; width: 100%; }
+  .hero-cta .btn-primary, .hero-cta .btn-secondary { width: 100%; justify-content: center; }
 }
