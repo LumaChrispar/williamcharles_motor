@@ -1,6 +1,6 @@
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: rgba(10,10,10,0.6); backdrop-filter: blur(20px);
+  background: rgba(10,10,10,0.92); backdrop-filter: blur(20px);
   border-bottom: 1px solid transparent; transition: var(--transition);
   height: var(--header-height);
 }
