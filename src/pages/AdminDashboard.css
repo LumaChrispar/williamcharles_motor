@@ -147,7 +147,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   background: #050507;
 }
@@ -694,11 +694,13 @@
 }
 
 .admin-chat-input {
-  padding: 24px 32px;
+  padding: 16px 32px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   background: #111;
   border-top: 1px solid #1f1f1f;
   display: flex;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .admin-chat-input input {
@@ -941,7 +943,7 @@
   .admin-conv-list {
     width: 100%;
     min-width: 100%;
-    max-height: calc(100vh - 180px);
+    max-height: calc(100dvh - 180px);
     border-right: none;
     background: #09090a;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
@@ -949,7 +951,7 @@
   .admin-chat-area {
     width: 100%;
     min-width: 100%;
-    max-height: calc(100vh - 160px);
+    max-height: calc(100dvh - 160px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
