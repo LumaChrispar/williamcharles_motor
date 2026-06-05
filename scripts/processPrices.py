@@ -4,8 +4,8 @@ import random
 import os
 
 # Define brands and models to remove
-BRANDS_TO_REMOVE = ['FERRARI', 'LAMBORGHINI']
-SUPERCAR_KEYWORDS = ['VALKYRIE', 'VALHALLA', 'SUPERLEGGERA', 'GT 63 S', 'R8 GT', 'MCLAREN']
+BRANDS_TO_REMOVE = ['FERRARI', 'LAMBORGHINI', 'ROLLS ROYCE', 'BENTLEY']
+SUPERCAR_KEYWORDS = ['VALKYRIE', 'VALHALLA', 'SUPERLEGGERA', 'GT 63 S', 'R8 GT', 'MCLAREN', 'DBX', 'DB11', 'LAGONDA']
 
 def should_remove(car):
     """Check if a car should be removed"""
