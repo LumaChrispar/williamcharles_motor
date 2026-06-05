@@ -1,8 +1,5 @@
 // Initial mockup leads for rich administrative panel display upon loading
-const INITIAL_INQUIRIES = [
-  { id: 1, name: 'David Beckham', email: 'david@beckham.com', phone: '+44 7911 123456', subject: 'Vehicle Enquiry', message: 'Hi, is the Porsche 911 Carrera S still available for a weekend test drive?', car: 'Porsche 911 Carrera S', date: 'May 27, 2026', status: 'Pending' },
-  { id: 2, name: 'Lewis Hamilton', email: 'lewis@mercedes.com', phone: '+44 7911 654321', subject: 'Arrange Viewing', message: 'Looking forward to viewing the Audi RS5 Sportback RS Sport Pack on Tuesday morning.', car: 'Audi RS5 RS Sport Pack', date: 'May 26, 2026', status: 'Replied' }
-];
+const INITIAL_INQUIRIES = [];
 
 const INITIAL_VIP_LEADS = [
   { id: 1, name: 'Lionel Messi', email: 'leo@messi.com', phone: '+34 600 000 000', carInterest: 'BMW M3 Competition', date: 'May 27, 2026' }
@@ -11,8 +8,8 @@ const INITIAL_VIP_LEADS = [
 export const getInquiries = () => {
   const data = localStorage.getItem('wc_inquiries');
   if (!data) {
-    localStorage.setItem('wc_inquiries', JSON.stringify(INITIAL_INQUIRIES));
-    return INITIAL_INQUIRIES;
+    localStorage.setItem('wc_inquiries', JSON.stringify([]));
+    return [];
   }
   return JSON.parse(data);
 };
