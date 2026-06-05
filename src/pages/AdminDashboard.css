@@ -852,6 +852,7 @@
   }
   .admin-content {
     padding: 80px 24px 40px;
+    overflow-x: hidden;
   }
   .admin-messages-layout {
     flex-direction: row;
@@ -859,6 +860,7 @@
     width: 200%;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    min-height: calc(100vh - 80px);
   }
   .mobile-view-list {
     transform: translateX(0);
@@ -867,13 +869,41 @@
     transform: translateX(-50%);
   }
   .admin-conv-list {
-    width: 50%;
+    width: 100%;
+    min-width: 100%;
     height: calc(100vh - 80px);
     border-right: none;
   }
   .admin-chat-area {
-    width: 50%;
+    width: 100%;
+    min-width: 100%;
     height: calc(100vh - 80px);
+    overflow: hidden;
+  }
+  .admin-conv-list-header {
+    padding: 18px 16px;
+  }
+  .admin-conv-item {
+    padding: 16px 18px;
+    gap: 12px;
+  }
+  .admin-chat-header {
+    padding: 16px 20px;
+  }
+  .admin-chat-messages {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+  .admin-chat-input {
+    padding: 16px 16px;
+    gap: 12px;
+  }
+  .admin-chat-input input {
+    padding: 14px 16px;
+  }
+  .admin-chat-input button {
+    width: 48px;
+    height: 48px;
   }
   .chat-mobile-back-btn {
     display: flex;
