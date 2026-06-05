@@ -294,7 +294,7 @@
 
 /* Input */
 .chat-widget-input {
-  padding: 0px 16px;
+  padding: 10px 16px;
   border-top: 1px solid #1f1f1f;
   display: flex;
   gap: 10px;
