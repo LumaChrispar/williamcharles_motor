@@ -352,8 +352,8 @@
     position: fixed;
     inset: 0;
     width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     border-radius: 0;
     z-index: 99999;
     transform: none;
@@ -361,7 +361,6 @@
   }
   .chat-widget-messages {
     max-height: none;
-    height: 100%;
   }
   .chat-widget-fab {
     width: 52px;

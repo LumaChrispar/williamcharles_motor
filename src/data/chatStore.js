@@ -12,6 +12,22 @@ export function getCustomerInfo() {
   };
 }
 
+export async function updateConversationVehicle(conversationId, vehicle) {
+  await supabase
+    .from('conversations')
+    .update({
+      vehicle: {
+        make: vehicle.make,
+        model: vehicle.model,
+        year: vehicle.year,
+        price: vehicle.price,
+        image: vehicle.image || vehicle.images?.[0] || ''
+      },
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', conversationId);
+}
+
 // -------------------------------------------------------------
 // Asynchronous Operations using Supabase
 // -------------------------------------------------------------

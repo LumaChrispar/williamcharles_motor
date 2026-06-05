@@ -6,7 +6,8 @@ import {
   markAsRead,
   getActiveConversationId,
   getCustomerInfo,
-  subscribeToConversations
+  subscribeToConversations,
+  updateConversationVehicle
 } from '../data/chatStore';
 import './ChatWidget.css';
 
@@ -48,6 +49,7 @@ export default function ChatWidget({ vehicleToChat, onChatOpened }) {
           // Already have an active conversation, just send car details as a new message
           const conv = await getConversation(activeId);
           if (conv) {
+            await updateConversationVehicle(activeId, vehicleToChat);
             await addMessage(activeId, {
               sender: 'customer',
               text: `Hi! I'm interested in the ${vehicleToChat.make} ${vehicleToChat.model} (${vehicleToChat.year}) listed at £${vehicleToChat.price.toLocaleString()}. Can you tell me more?`
