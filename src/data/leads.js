@@ -5,13 +5,24 @@ const INITIAL_VIP_LEADS = [
   { id: 1, name: 'Lionel Messi', email: 'leo@messi.com', phone: '+34 600 000 000', carInterest: 'BMW M3 Competition', date: 'May 27, 2026' }
 ];
 
+const PLACEHOLDER_INQUIRIES = [
+  'david@beckham.com',
+  'lewis@mercedes.com'
+];
+
 export const getInquiries = () => {
   const data = localStorage.getItem('wc_inquiries');
   if (!data) {
     localStorage.setItem('wc_inquiries', JSON.stringify([]));
     return [];
   }
-  return JSON.parse(data);
+
+  const parsed = JSON.parse(data);
+  const filtered = parsed.filter(i => !PLACEHOLDER_INQUIRIES.includes(i.email));
+  if (filtered.length !== parsed.length) {
+    localStorage.setItem('wc_inquiries', JSON.stringify(filtered));
+  }
+  return filtered;
 };
 
 export const addInquiry = (inquiry) => {

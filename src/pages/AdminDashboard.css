@@ -442,39 +442,103 @@
   color: var(--text-secondary);
 }
 
-.chat-empty-icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
 .admin-chat-header {
-  padding: 20px 32px;
-  background: #111;
-  border-bottom: 1px solid #1f1f1f;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  padding: 20px 32px;
+  background: #111;
+  border-bottom: 1px solid #1f1f1f;
+  flex-wrap: wrap;
 }
 
 .chat-header-info {
   display: flex;
   align-items: center;
   gap: 16px;
+  min-width: 0;
+  flex: 1 1 320px;
 }
 
-.chat-header-avatar {
-  width: 48px;
-  height: 48px;
+.chat-header-car {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #141414;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid #1f1f1f;
+  flex: 0 1 auto;
+}
+
+.admin-chat-messages {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-chat-input {
+  padding: 24px 32px;
+  background: #111;
+  border-top: 1px solid #1f1f1f;
+  display: flex;
+  gap: 16px;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+.admin-chat-input input {
+  flex: 1;
+  background: #1f1f1f;
+  border: 1px solid #2a2a2a;
+  padding: 16px 24px;
+  border-radius: 24px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.admin-chat-input button {
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: var(--accent);
   color: #0a0a0a;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
 }
+
+.admin-chat-input button:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: scale(1.05);
+  }
+
+  .chat-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .chat-header-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
 
 .chat-header-info h3 {
   font-size: 1.1rem;
