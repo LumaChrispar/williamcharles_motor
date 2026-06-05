@@ -58,6 +58,7 @@ export default function Footer() {
               <a href="#" aria-label="Facebook">FB</a>
               <a href="#" aria-label="Instagram">IG</a>
               <a href="#" aria-label="Twitter">X</a>
+              <a href="https://www.tiktok.com/@williamcharles_motor?_r=1&_t=ZS-96x0X6a0t5s" target="_blank" rel="noopener noreferrer" aria-label="TikTok">TK</a>
             </div>
           </div>
         </div>
