@@ -13,6 +13,7 @@ import SellYourCar from './pages/SellYourCar';
 import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import PwaNotificationPrompt from './components/PwaNotificationPrompt';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -72,6 +73,7 @@ export default function App() {
         />
       )}
       {!isAdminRoute && <WelcomeOnboarding />}
+      {!isAdminRoute && <PwaNotificationPrompt />}
     </>
   );
 }

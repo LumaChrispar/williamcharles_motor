@@ -1,0 +1,71 @@
+.pwa-notification-prompt {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  padding: 16px 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9999;
+  max-width: 300px;
+  backdrop-filter: blur(10px);
+  animation: slideUpFade 0.5s ease-out;
+}
+
+@keyframes slideUpFade {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.pwa-notification-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.pwa-notification-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #aaa;
+  line-height: 1.4;
+}
+
+.pwa-notification-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pwa-notification-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pwa-notification-btn.allow {
+  background: #ff3333;
+  color: #fff;
+}
+
+.pwa-notification-btn.allow:hover {
+  background: #e62e2e;
+}
+
+.pwa-notification-btn.dismiss {
+  background: transparent;
+  color: #888;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pwa-notification-btn.dismiss:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
