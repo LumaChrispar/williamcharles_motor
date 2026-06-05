@@ -1,8 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getConversations, getConversation, addMessage, markAsRead, deleteConversation, getAdminUnreadCount, clearMessages, clearAllConversations } from '../data/chatStore';
-import { getInquiries, updateInquiryStatus, deleteInquiry } from '../data/leads';
-import { getVipLeads } from '../data/leads';
+import { 
+  getConversations, 
+  getConversation, 
+  addMessage, 
+  markAsRead, 
+  deleteConversation, 
+  getAdminUnreadCount, 
+  clearMessages, 
+  clearAllConversations,
+  subscribeToConversations
+} from '../data/chatStore';
+import { getInquiries, updateInquiryStatus, deleteInquiry, getVipLeads } from '../data/leads';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
@@ -14,6 +23,7 @@ export default function AdminDashboard() {
   const [inquiries, setInquiries] = useState([]);
   const [vipLeads, setVipLeads] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const chatEndRef = useRef(null);
 
   // Auth guard
@@ -23,23 +33,42 @@ export default function AdminDashboard() {
     }
   }, [navigate]);
 
-  // Load data
+  // Load initial data
   useEffect(() => {
-    setConversations(getConversations());
-    setInquiries(getInquiries());
-    setVipLeads(getVipLeads());
+    async function loadInitialData() {
+      const convs = await getConversations();
+      setConversations(convs);
+      
+      const count = await getAdminUnreadCount();
+      setUnreadCount(count);
+      
+      setInquiries(getInquiries());
+      setVipLeads(getVipLeads());
+    }
+    loadInitialData();
   }, []);
 
-  // Poll for new messages every 2 seconds
+  // Real-time subscription
   useEffect(() => {
-    const interval = setInterval(() => {
-      setConversations(getConversations());
+    const unsubscribe = subscribeToConversations(async () => {
+      const convs = await getConversations();
+      setConversations(convs);
+      
+      const count = await getAdminUnreadCount();
+      setUnreadCount(count);
+
+      // If viewing a chat, refresh it
       if (activeChat) {
-        const updated = getConversation(activeChat.id);
-        if (updated) setActiveChat(updated);
+        const updated = await getConversation(activeChat.id);
+        if (updated) {
+          setActiveChat(updated);
+        } else {
+          setActiveChat(null); // was deleted
+        }
       }
-    }, 2000);
-    return () => clearInterval(interval);
+    });
+
+    return unsubscribe;
   }, [activeChat]);
 
   // Scroll to bottom when chat messages change
@@ -54,44 +83,65 @@ export default function AdminDashboard() {
     navigate('/admin', { replace: true });
   };
 
-  const openChat = (conv) => {
-    markAsRead(conv.id, 'admin');
-    const updated = getConversation(conv.id);
+  const openChat = async (conv) => {
+    await markAsRead(conv.id, 'admin');
+    const updated = await getConversation(conv.id);
     setActiveChat(updated);
-    setConversations(getConversations());
+    
+    // Refresh to update badges
+    const convs = await getConversations();
+    setConversations(convs);
+    setUnreadCount(await getAdminUnreadCount());
+    
     setSidebarOpen(false);
   };
 
-  const sendAdminMessage = (e) => {
+  const sendAdminMessage = async (e) => {
     e.preventDefault();
     if (!chatInput.trim() || !activeChat) return;
-    addMessage(activeChat.id, { sender: 'admin', text: chatInput.trim() });
-    setChatInput('');
-    const updated = getConversation(activeChat.id);
+    
+    const currentInput = chatInput.trim();
+    setChatInput(''); // clear immediately for UX
+    
+    await addMessage(activeChat.id, { sender: 'admin', text: currentInput });
+    
+    const updated = await getConversation(activeChat.id);
     setActiveChat(updated);
-    setConversations(getConversations());
+    
+    const convs = await getConversations();
+    setConversations(convs);
   };
 
-  const handleDeleteConversation = (id) => {
+  const handleDeleteConversation = async (id) => {
     if (window.confirm('Are you sure you want to delete this conversation?')) {
-      deleteConversation(id);
-      setConversations(getConversations());
+      await deleteConversation(id);
+      
+      const convs = await getConversations();
+      setConversations(convs);
+      setUnreadCount(await getAdminUnreadCount());
+      
       if (activeChat?.id === id) setActiveChat(null);
     }
   };
 
-  const handleClearMessages = (id) => {
+  const handleClearMessages = async (id) => {
     if (window.confirm('Are you sure you want to clear all messages in this chat? The customer will also see an empty chat.')) {
-      clearMessages(id);
-      setConversations(getConversations());
-      if (activeChat?.id === id) setActiveChat(getConversation(id));
+      await clearMessages(id);
+      
+      const convs = await getConversations();
+      setConversations(convs);
+      
+      if (activeChat?.id === id) {
+        setActiveChat(await getConversation(id));
+      }
     }
   };
 
-  const handleClearAllConversations = () => {
+  const handleClearAllConversations = async () => {
     if (window.confirm('Are you sure you want to delete ALL conversations? This cannot be undone.')) {
-      clearAllConversations();
+      await clearAllConversations();
       setConversations([]);
+      setUnreadCount(0);
       setActiveChat(null);
     }
   };
@@ -106,7 +156,6 @@ export default function AdminDashboard() {
     setInquiries(getInquiries());
   };
 
-  const unreadCount = getAdminUnreadCount();
   const activeChats = conversations.filter(c => c.status === 'active').length;
   const pendingInquiries = inquiries.filter(i => i.status === 'Pending').length;
 

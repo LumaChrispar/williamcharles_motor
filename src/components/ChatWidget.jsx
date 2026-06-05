@@ -5,7 +5,8 @@ import {
   addMessage,
   markAsRead,
   getActiveConversationId,
-  getCustomerInfo
+  getCustomerInfo,
+  subscribeToConversations
 } from '../data/chatStore';
 import './ChatWidget.css';
 
@@ -21,54 +22,61 @@ export default function ChatWidget({ vehicleToChat, onChatOpened }) {
 
   // On mount, check for existing active conversation
   useEffect(() => {
-    const activeId = getActiveConversationId();
-    if (activeId) {
-      const conv = getConversation(activeId);
-      if (conv) {
-        setConversation(conv);
-        setStep('chat');
-        const info = getCustomerInfo();
-        setFormData({ name: info.name, email: info.email });
+    async function loadActive() {
+      const activeId = getActiveConversationId();
+      if (activeId) {
+        const conv = await getConversation(activeId);
+        if (conv) {
+          setConversation(conv);
+          setStep('chat');
+          const info = getCustomerInfo();
+          setFormData({ name: info.name, email: info.email });
+        }
       }
     }
+    loadActive();
   }, []);
 
   // When vehicleToChat is set externally (from VehicleDetail), open widget
   useEffect(() => {
-    if (vehicleToChat) {
-      setIsOpen(true);
-      const activeId = getActiveConversationId();
-      const info = getCustomerInfo();
-      if (activeId && info.name) {
-        // Already have an active conversation, just send car details as a new message
-        const conv = getConversation(activeId);
-        if (conv) {
-          addMessage(activeId, {
-            sender: 'customer',
-            text: `Hi! I'm interested in the ${vehicleToChat.make} ${vehicleToChat.model} (${vehicleToChat.year}) listed at £${vehicleToChat.price.toLocaleString()}. Can you tell me more?`
-          });
-          setConversation(getConversation(activeId));
-          setStep('chat');
-          if (onChatOpened) onChatOpened();
-          return;
+    async function handleVehicleToChat() {
+      if (vehicleToChat) {
+        setIsOpen(true);
+        const activeId = getActiveConversationId();
+        const info = getCustomerInfo();
+        if (activeId && info.name) {
+          // Already have an active conversation, just send car details as a new message
+          const conv = await getConversation(activeId);
+          if (conv) {
+            await addMessage(activeId, {
+              sender: 'customer',
+              text: `Hi! I'm interested in the ${vehicleToChat.make} ${vehicleToChat.model} (${vehicleToChat.year}) listed at £${vehicleToChat.price.toLocaleString()}. Can you tell me more?`
+            });
+            const updated = await getConversation(activeId);
+            setConversation(updated);
+            setStep('chat');
+            if (onChatOpened) onChatOpened();
+            return;
+          }
         }
+        // No active conversation, show form
+        setStep('form');
       }
-      // No active conversation, show form
-      setStep('form');
     }
+    handleVehicleToChat();
   }, [vehicleToChat]);
 
-  // Poll for new messages
+  // Subscribe to real-time messages instead of polling
   useEffect(() => {
     if (!conversation) return;
-    const interval = setInterval(() => {
-      const updated = getConversation(conversation.id);
+    const unsubscribe = subscribeToConversations(async () => {
+      const updated = await getConversation(conversation.id);
       if (updated && updated.messages.length !== conversation.messages.length) {
         setConversation(updated);
         if (!isOpen) setHasNewMessage(true);
       }
-    }, 2000);
-    return () => clearInterval(interval);
+    });
+    return unsubscribe;
   }, [conversation, isOpen]);
 
   // Scroll to bottom
@@ -85,7 +93,7 @@ export default function ChatWidget({ vehicleToChat, onChatOpened }) {
     }
   }, [isOpen, step]);
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim()) return;
 
@@ -97,39 +105,44 @@ export default function ChatWidget({ vehicleToChat, onChatOpened }) {
       image: ''
     };
 
-    const conv = createConversation({
+    const conv = await createConversation({
       customerName: formData.name.trim(),
       customerEmail: formData.email.trim(),
       vehicle
     });
 
+    if (!conv) return;
+
     // Send initial customer message if there's a vehicle
     if (vehicleToChat) {
-      addMessage(conv.id, {
+      await addMessage(conv.id, {
         sender: 'customer',
         text: `Hi! I'm interested in the ${vehicle.make} ${vehicle.model} (${vehicle.year}) listed at £${vehicle.price.toLocaleString()}. Can you tell me more about this vehicle?`
       });
     }
 
-    setConversation(getConversation(conv.id));
+    const updated = await getConversation(conv.id);
+    setConversation(updated);
     setStep('chat');
     if (onChatOpened) onChatOpened();
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!chatInput.trim() || !conversation) return;
-    addMessage(conversation.id, { sender: 'customer', text: chatInput.trim() });
-    setChatInput('');
-    setConversation(getConversation(conversation.id));
+    const currentInput = chatInput.trim();
+    setChatInput(''); // clear immediately for better UX
+    await addMessage(conversation.id, { sender: 'customer', text: currentInput });
+    const updated = await getConversation(conversation.id);
+    setConversation(updated);
   };
 
-  const toggleWidget = () => {
+  const toggleWidget = async () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
       setHasNewMessage(false);
       if (conversation) {
-        markAsRead(conversation.id, 'customer');
+        await markAsRead(conversation.id, 'customer');
       }
     }
   };
