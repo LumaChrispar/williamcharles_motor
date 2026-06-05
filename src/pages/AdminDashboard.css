@@ -854,16 +854,42 @@
     padding: 80px 24px 40px;
   }
   .admin-messages-layout {
-    flex-direction: column;
+    flex-direction: row;
     padding: 0;
+    width: 200%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+  .mobile-view-list {
+    transform: translateX(0);
+  }
+  .mobile-view-chat {
+    transform: translateX(-50%);
   }
   .admin-conv-list {
-    width: 100%;
-    height: 30vh;
+    width: 50%;
+    height: calc(100vh - 80px);
     border-right: none;
-    border-bottom: 1px solid #1f1f1f;
   }
   .admin-chat-area {
-    height: 70vh;
+    width: 50%;
+    height: calc(100vh - 80px);
+  }
+  .chat-mobile-back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 8px;
+    margin-left: -8px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .chat-mobile-back-btn {
+    display: none;
   }
 }

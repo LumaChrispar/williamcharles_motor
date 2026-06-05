@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [inquiries, setInquiries] = useState([]);
   const [vipLeads, setVipLeads] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileChatView, setMobileChatView] = useState('list');
   const [unreadCount, setUnreadCount] = useState(0);
   const chatEndRef = useRef(null);
 
@@ -94,6 +95,7 @@ export default function AdminDashboard() {
     setUnreadCount(await getAdminUnreadCount());
     
     setSidebarOpen(false);
+    setMobileChatView('chat');
   };
 
   const sendAdminMessage = async (e) => {
@@ -293,7 +295,7 @@ export default function AdminDashboard() {
 
         {/* Messages Tab */}
         {activeTab === 'messages' && (
-          <div className="admin-content admin-messages-layout fade-in">
+          <div className={`admin-content admin-messages-layout fade-in mobile-view-${mobileChatView}`}>
             {/* Conversation list */}
             <div className="admin-conv-list">
               <div className="admin-conv-list-header">
@@ -345,6 +347,12 @@ export default function AdminDashboard() {
                 <>
                   <div className="admin-chat-header">
                     <div className="chat-header-info">
+                      <button className="chat-mobile-back-btn" onClick={() => setMobileChatView('list')}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="19" y1="12" x2="5" y2="12"></line>
+                          <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                      </button>
                       <div className="chat-header-avatar">
                         {activeChat.customerName.charAt(0).toUpperCase()}
                       </div>

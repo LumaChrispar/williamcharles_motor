@@ -42,8 +42,9 @@
   .hamburger { display: flex; }
   .nav {
     position: fixed; top: var(--header-height); left: 0; right: 0; bottom: 0;
-    background: rgba(10,10,10,0.98); flex-direction: column; justify-content: flex-start;
+    background: #0a0a0a; flex-direction: column; justify-content: flex-start;
     padding: 40px 24px; gap: 8px; transform: translateX(100%); transition: var(--transition);
+    z-index: 999;
   }
   .nav.open { transform: translateX(0); }
   .nav-link { font-size: 1.2rem; padding: 16px; width: 100%; text-align: center; }
