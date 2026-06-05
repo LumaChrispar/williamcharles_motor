@@ -919,23 +919,29 @@
     overflow-x: hidden;
   }
   .admin-messages-layout {
-    flex-direction: row;
+    flex-direction: column;
     padding: 0;
-    width: 200%;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    transition: none;
     overflow: hidden;
-    min-height: calc(100vh - 80px);
+    min-height: auto;
   }
-  .mobile-view-list {
-    transform: translateX(0);
+  .mobile-view-list .admin-conv-list {
+    display: block;
   }
-  .mobile-view-chat {
-    transform: translateX(-50%);
+  .mobile-view-list .admin-chat-area {
+    display: none;
+  }
+  .mobile-view-chat .admin-conv-list {
+    display: none;
+  }
+  .mobile-view-chat .admin-chat-area {
+    display: flex;
   }
   .admin-conv-list {
     width: 100%;
     min-width: 100%;
-    height: calc(100vh - 80px);
+    max-height: calc(100vh - 180px);
     border-right: none;
     background: #09090a;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
@@ -943,7 +949,7 @@
   .admin-chat-area {
     width: 100%;
     min-width: 100%;
-    height: calc(100vh - 80px);
+    max-height: calc(100vh - 160px);
     overflow: hidden;
     display: flex;
     flex-direction: column;

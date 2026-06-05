@@ -1,13 +1,13 @@
 // Initial mockup leads for rich administrative panel display upon loading
 const INITIAL_INQUIRIES = [];
 
-const INITIAL_VIP_LEADS = [
-  { id: 1, name: 'Lionel Messi', email: 'leo@messi.com', phone: '+34 600 000 000', carInterest: 'BMW M3 Competition', date: 'May 27, 2026' }
-];
-
+const INITIAL_VIP_LEADS = [];
 const PLACEHOLDER_INQUIRIES = [
   'david@beckham.com',
   'lewis@mercedes.com'
+];
+const PLACEHOLDER_VIP_LEADS = [
+  'leo@messi.com'
 ];
 
 export const getInquiries = () => {
@@ -55,10 +55,16 @@ export const deleteInquiry = (id) => {
 export const getVipLeads = () => {
   const data = localStorage.getItem('wc_vip_leads');
   if (!data) {
-    localStorage.setItem('wc_vip_leads', JSON.stringify(INITIAL_VIP_LEADS));
-    return INITIAL_VIP_LEADS;
+    localStorage.setItem('wc_vip_leads', JSON.stringify([]));
+    return [];
   }
-  return JSON.parse(data);
+
+  const parsed = JSON.parse(data);
+  const filtered = parsed.filter(l => !PLACEHOLDER_VIP_LEADS.includes(l.email));
+  if (filtered.length !== parsed.length) {
+    localStorage.setItem('wc_vip_leads', JSON.stringify(filtered));
+  }
+  return filtered;
 };
 
 export const addVipLead = (lead) => {
