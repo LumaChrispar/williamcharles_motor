@@ -34,8 +34,15 @@ export default function VehicleDetail() {
   useEffect(() => {
     if (!vehicle) return;
     setImagesLoading(true);
-    setWikiImages([]);
     setActiveImg(0);
+
+    if (vehicle.localImages && vehicle.localImages.length > 0) {
+      setWikiImages(vehicle.localImages);
+      setImagesLoading(false);
+      return;
+    }
+
+    setWikiImages([]);
     getVehicleImages(vehicle.make, vehicle.model).then(urls => {
       setWikiImages(urls.length > 0 ? urls.slice(0, 4) : []);
       setImagesLoading(false);

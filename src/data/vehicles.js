@@ -25,6 +25,9 @@ const BODY_IMAGES = {
 
 function assignImages(vehicles) {
   return vehicles.map(v => {
+    if (v.localImages && v.localImages.length > 0) {
+      return { ...v, images: v.localImages };
+    }
     const baseImages = BODY_IMAGES[v.bodyType] || BODY_IMAGES['Saloon'];
     const shuffled = [...baseImages].sort(() => (Math.sin(v.id) * 10000 % 1) - 0.5);
     return { ...v, images: shuffled };
@@ -48,7 +51,13 @@ export async function fetchAllVehicles() {
 
 export const getAvailableVehicles = async () => {
   const cars = await fetchAllVehicles();
-  return cars.filter(v => !v.sold && v.price <= 10000);
+  return cars
+    .filter(v => !v.sold)
+    .sort((a, b) => {
+      if (a.isPrimary && !b.isPrimary) return -1;
+      if (!a.isPrimary && b.isPrimary) return 1;
+      return 0;
+    });
 };
 
 export const getSoldVehicles = async () => {
@@ -58,6 +67,10 @@ export const getSoldVehicles = async () => {
 
 export const getFeaturedVehicles = async () => {
   const cars = await fetchAllVehicles();
+  const primaryCars = cars.filter(v => !v.sold && v.isPrimary);
+  if (primaryCars.length > 0) {
+    return primaryCars.slice(0, 12);
+  }
   return cars
     .filter(v => !v.sold && v.price >= 5000 && v.price <= 20000)
     .sort((a, b) => b.price - a.price)

@@ -7,13 +7,18 @@ import { getVehicleImage } from '../data/imageService';
  * If Wikipedia has no image, shows a clean branded "No Photo" placeholder
  * instead of a generic fallback.
  */
-export default function VehicleImage({ make, model, bodyType, alt, className, style }) {
-  const [src, setSrc] = useState(null);
+export default function VehicleImage({ make, model, bodyType, alt, className, style, providedSrc }) {
+  const [src, setSrc] = useState(providedSrc || null);
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
+    if (providedSrc) {
+      setSrc(providedSrc);
+      return;
+    }
+
     let cancelled = false;
     setSrc(null);
     setLoaded(false);

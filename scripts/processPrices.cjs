@@ -25,9 +25,34 @@ function shouldRemove(car) {
   return false;
 }
 
-// Function to generate random price between min and max
-function getRandomPrice(min = 2000, max = 35000) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+// Function to generate a realistic secondhand price for each car
+function getRandomPrice(car) {
+  const currentYear = new Date().getFullYear();
+  const age = currentYear - (car.year || 2020);
+
+  if (car.isPrimary) {
+    const min = 7000;
+    const max = 12000;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  let minPrice = 2000;
+  let maxPrice = 9500;
+  if (age <= 1) {
+    minPrice = 6000;
+    maxPrice = 12000;
+  } else if (age <= 3) {
+    minPrice = 4500;
+    maxPrice = 10500;
+  } else if (age <= 6) {
+    minPrice = 3000;
+    maxPrice = 8500;
+  } else {
+    minPrice = 2000;
+    maxPrice = 6500;
+  }
+
+  return Math.floor(Math.random() * (maxPrice - minPrice + 1)) + minPrice;
 }
 
 // Read the JSON file
@@ -41,7 +66,7 @@ const processedData = data
   .filter(car => !shouldRemove(car))
   .map(car => ({
     ...car,
-    price: getRandomPrice() // Assign random price
+    price: getRandomPrice(car) // Assign random price
   }));
 
 console.log(`Total vehicles after: ${processedData.length}`);

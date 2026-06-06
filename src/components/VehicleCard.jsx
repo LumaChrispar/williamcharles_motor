@@ -7,7 +7,7 @@ export default function VehicleCard({ vehicle }) {
   return (
     <div className={`vehicle-card${sold ? ' sold' : ''}`} id={`vehicle-card-${id}`}>
       <div className="card-image">
-        <VehicleImage make={make} model={model} bodyType={bodyType} alt={`${make} ${model}`} className="card-img" />
+        <VehicleImage make={make} model={model} bodyType={bodyType} alt={`${make} ${model}`} className="card-img" providedSrc={vehicle.images?.[0]} />
         {sold && <div className="sold-badge">SOLD</div>}
         <div className="card-overlay">
           <Link to={`/vehicle/${id}`} className="btn-primary">View Details</Link>
