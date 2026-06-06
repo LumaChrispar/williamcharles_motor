@@ -26,6 +26,7 @@ export default function AdminDashboard() {
   const [mobileChatView, setMobileChatView] = useState('list');
   const [unreadCount, setUnreadCount] = useState(0);
   const chatEndRef = useRef(null);
+  const prevUnreadRef = useRef(0);
 
   // Auth guard
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function AdminDashboard() {
       
       const count = await getAdminUnreadCount();
       setUnreadCount(count);
+      prevUnreadRef.current = count;
       
       setInquiries(getInquiries());
       setVipLeads(getVipLeads());
@@ -56,6 +58,34 @@ export default function AdminDashboard() {
       setConversations(convs);
       
       const count = await getAdminUnreadCount();
+      // Play a short notification sound if unread admin count increases
+      if (typeof window !== 'undefined') {
+        try {
+          if (count > (prevUnreadRef.current || 0)) {
+            // Play audio via WebAudio (no external asset required)
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+              const ctx = new AudioCtx();
+              const o = ctx.createOscillator();
+              const g = ctx.createGain();
+              o.type = 'sine';
+              o.frequency.value = 880; // A5
+              g.gain.value = 0.05;
+              o.connect(g);
+              g.connect(ctx.destination);
+              o.start();
+              setTimeout(() => {
+                o.stop();
+                try { ctx.close(); } catch (e) {}
+              }, 160);
+            }
+          }
+        } catch (err) {
+          console.warn('Notification sound failed:', err);
+        }
+      }
+
+      prevUnreadRef.current = count;
       setUnreadCount(count);
 
       // If viewing a chat, refresh it
