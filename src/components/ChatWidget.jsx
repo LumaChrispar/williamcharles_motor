@@ -9,6 +9,7 @@ import {
   subscribeToConversations,
   updateConversationVehicle
 } from '../data/chatStore';
+import { playEnterSound, playSendSound, playReceiveSound } from '../utils/audio';
 import './ChatWidget.css';
 
 export default function ChatWidget({ vehicleToChat, onChatOpened }) {
@@ -74,6 +75,14 @@ export default function ChatWidget({ vehicleToChat, onChatOpened }) {
     const unsubscribe = subscribeToConversations(async () => {
       const updated = await getConversation(conversation.id);
       if (updated && updated.messages.length !== conversation.messages.length) {
+        // Detect if the newest message is from admin
+        if (updated.messages.length > conversation.messages.length) {
+          const newMessages = updated.messages.slice(conversation.messages.length);
+          const hasAdminMessage = newMessages.some(m => m.sender === 'admin');
+          if (hasAdminMessage) {
+            playReceiveSound();
+          }
+        }
         setConversation(updated);
         if (!isOpen) setHasNewMessage(true);
       }
@@ -126,6 +135,7 @@ export default function ChatWidget({ vehicleToChat, onChatOpened }) {
     const updated = await getConversation(conv.id);
     setConversation(updated);
     setStep('chat');
+    playEnterSound();
     if (onChatOpened) onChatOpened();
   };
 
@@ -134,6 +144,7 @@ export default function ChatWidget({ vehicleToChat, onChatOpened }) {
     if (!chatInput.trim() || !conversation) return;
     const currentInput = chatInput.trim();
     setChatInput(''); // clear immediately for better UX
+    playSendSound();
     await addMessage(conversation.id, { sender: 'customer', text: currentInput });
     const updated = await getConversation(conversation.id);
     setConversation(updated);

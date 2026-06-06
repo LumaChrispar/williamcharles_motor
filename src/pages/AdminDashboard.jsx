@@ -12,6 +12,7 @@ import {
   subscribeToConversations
 } from '../data/chatStore';
 import { getInquiries, updateInquiryStatus, deleteInquiry, getVipLeads } from '../data/leads';
+import { playSendSound, playReceiveSound } from '../utils/audio';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
@@ -59,30 +60,8 @@ export default function AdminDashboard() {
       
       const count = await getAdminUnreadCount();
       // Play a short notification sound if unread admin count increases
-      if (typeof window !== 'undefined') {
-        try {
-          if (count > (prevUnreadRef.current || 0)) {
-            // Play audio via WebAudio (no external asset required)
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (AudioCtx) {
-              const ctx = new AudioCtx();
-              const o = ctx.createOscillator();
-              const g = ctx.createGain();
-              o.type = 'sine';
-              o.frequency.value = 880; // A5
-              g.gain.value = 0.05;
-              o.connect(g);
-              g.connect(ctx.destination);
-              o.start();
-              setTimeout(() => {
-                o.stop();
-                try { ctx.close(); } catch (e) {}
-              }, 160);
-            }
-          }
-        } catch (err) {
-          console.warn('Notification sound failed:', err);
-        }
+      if (count > (prevUnreadRef.current || 0)) {
+        playReceiveSound();
       }
 
       prevUnreadRef.current = count;
@@ -93,6 +72,15 @@ export default function AdminDashboard() {
         const updated = await getConversation(activeChat.id);
         if (updated) {
           setActiveChat(updated);
+          // Automatically mark as read if it's the currently open chat
+          if (updated.unreadAdmin > 0) {
+            await markAsRead(updated.id, 'admin');
+            const newConvs = await getConversations();
+            setConversations(newConvs);
+            const newCount = await getAdminUnreadCount();
+            setUnreadCount(newCount);
+            prevUnreadRef.current = newCount;
+          }
         } else {
           setActiveChat(null); // was deleted
         }
@@ -135,6 +123,7 @@ export default function AdminDashboard() {
     const currentInput = chatInput.trim();
     setChatInput(''); // clear immediately for UX
     
+    playSendSound();
     await addMessage(activeChat.id, { sender: 'admin', text: currentInput });
     
     const updated = await getConversation(activeChat.id);
